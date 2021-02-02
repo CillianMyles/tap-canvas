@@ -1,0 +1,15 @@
+name: outside_tap_example
+description: An example project
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  cupertino_icons: ^1.0.2
+  flutter:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
