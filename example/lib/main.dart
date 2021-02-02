@@ -11,31 +11,57 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp(
         title: 'Outside Tap Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.grey,
         ),
         home: Scaffold(
           backgroundColor: Colors.white,
-          body: Row(
-            children: [
-              Container(
-                width: 200,
-                color: Colors.redAccent,
-              ),
-              Expanded(
+          body: _DemoPage(),
+        ),
+        debugShowCheckedModeBanner: false,
+      );
+}
+
+class _DemoPage extends StatefulWidget {
+  @override
+  _DemoPageState createState() => _DemoPageState();
+}
+
+class _DemoPageState extends State<_DemoPage> {
+  final _focusNode = FocusNode(debugLabel: '$_DemoPageState');
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Row(
+        children: [
+          Container(
+            width: 200,
+            color: Colors.red[200],
+          ),
+          Expanded(
+            child: Container(
+              color: Colors.grey[200],
+              child: Center(
                 child: Container(
-                  color: Colors.grey,
-                  child: Center(
-                    child: Container(
-                      height: 50,
-                      width: 300,
-                      color: Colors.green,
-                    ),
+                  height: 50,
+                  width: 300,
+                  color: Colors.green[200],
+                  child: TextField(
+                    focusNode: _focusNode,
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
-        debugShowCheckedModeBanner: false,
+        ],
       );
 }
