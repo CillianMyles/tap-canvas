@@ -21,8 +21,7 @@ class _TapWatcherState extends State<TapWatcher>
     with SingleTickerProviderStateMixin {
   final Offset defaultOffset = const Offset(0, 0);
   double pageY = 0;
-  double reverseFrom = 0;
-  double textFieldBottom = 0;
+  double bottom = 0;
   RenderBox lastRenderBox;
 
   @override
@@ -46,35 +45,31 @@ class _TapWatcherState extends State<TapWatcher>
                 position: pointerUpEvent.position,
               );
 
-              // if there any widget in the path that must ignore taps,
-              // stop it right here
               if (boxHitTestResult.path.any((entry) =>
                   entry.target.runtimeType == OutsideTapIgnorerRenderBox)) {
+                // ignore taps to these widgets
                 return;
               }
 
-              final isEditable = boxHitTestResult.path.any((entry) =>
-                  entry.target.runtimeType == RenderEditable ||
-                  entry.target.runtimeType == RenderParagraph ||
+              final isWatched = boxHitTestResult.path.any((entry) =>
                   entry.target.runtimeType == OutsideTapWatcherRenderBox);
 
               final currentFocus = FocusScope.of(context);
-              if (!isEditable) {
+
+              if (!isWatched) {
                 if (!currentFocus.hasPrimaryFocus) {
                   currentFocus.unfocus();
                   lastRenderBox = null;
                 }
               } else {
                 for (final entry in boxHitTestResult.path) {
-                  final isEditable = entry.target.runtimeType ==
-                          RenderEditable ||
-                      entry.target.runtimeType == RenderParagraph ||
+                  final isWatched =
                       entry.target.runtimeType == OutsideTapWatcherRenderBox;
 
-                  if (isEditable) {
+                  if (isWatched) {
                     final renderBox = entry.target as RenderBox;
                     final offset = renderBox.localToGlobal(defaultOffset);
-                    textFieldBottom = offset.dy + renderBox.size.height - pageY;
+                    bottom = offset.dy + renderBox.size.height - pageY;
                     if (lastRenderBox != renderBox) {
                       setState(() {});
                       lastRenderBox = renderBox;
