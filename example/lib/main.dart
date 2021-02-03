@@ -14,21 +14,23 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
-        home: Scaffold(
+        home: const Scaffold(
           backgroundColor: Colors.white,
-          body: _DemoPage(),
+          body: DemoPage(),
         ),
         debugShowCheckedModeBanner: false,
       );
 }
 
-class _DemoPage extends StatefulWidget {
+class DemoPage extends StatefulWidget {
+  const DemoPage({Key key}) : super(key: key);
+
   @override
-  _DemoPageState createState() => _DemoPageState();
+  DemoPageState createState() => DemoPageState();
 }
 
-class _DemoPageState extends State<_DemoPage> {
-  final _focusNode = FocusNode(debugLabel: '$_DemoPageState');
+class DemoPageState extends State<DemoPage> {
+  final _focusNode = FocusNode(debugLabel: '$DemoPageState');
   final _textController = TextEditingController();
 
   @override
@@ -62,7 +64,10 @@ class _DemoPageState extends State<_DemoPage> {
                 color: Colors.grey[200],
                 child: Center(
                   child: TapOutsideDetectorWidget(
-                    onOutsideTapped: () => print('OUTSIDE TAPPED'),
+                    onOutsideTapped: () {
+                      print('OUTSIDE TAPPED');
+                      _focusNode.unfocus();
+                    },
                     child: Container(
                       height: 60,
                       width: 400,
