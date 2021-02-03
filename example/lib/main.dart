@@ -28,6 +28,7 @@ class _DemoPage extends StatefulWidget {
 
 class _DemoPageState extends State<_DemoPage> {
   final _focusNode = FocusNode(debugLabel: '$_DemoPageState');
+  final _textController = TextEditingController();
 
   @override
   void initState() {
@@ -52,11 +53,26 @@ class _DemoPageState extends State<_DemoPage> {
               color: Colors.grey[200],
               child: Center(
                 child: Container(
-                  height: 50,
-                  width: 300,
+                  height: 60,
+                  width: 400,
                   color: Colors.green[200],
-                  child: TextField(
-                    focusNode: _focusNode,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Container(
+                          height: 20,
+                          color: Colors.blue[100],
+                          child: TextField(
+                            focusNode: _focusNode,
+                            controller: _textController,
+                            textAlignVertical: TextAlignVertical.center,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                    ],
                   ),
                 ),
               ),
