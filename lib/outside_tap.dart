@@ -1,5 +1,7 @@
 library outside_tap;
 
+import 'dart:async';
+
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
@@ -16,98 +18,119 @@ class TapCanvas extends StatefulWidget {
 }
 
 class _TapCanvasState extends State<TapCanvas> {
+  final StreamController<Offset> _tapOffsetStreamController =
+      StreamController<Offset>.broadcast();
+
   @override
   void initState() {
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-        builder: (c, viewportConstraints) => ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: viewportConstraints.maxWidth,
-            maxHeight: viewportConstraints.maxHeight,
-          ),
-          child: Listener(
-            onPointerUp: (pointerUpEvent) {
-              print('*' * 20); // TODO: remove
-              print('pointerUpEvent -> $pointerUpEvent'); // TODO: remove
-              final renderBox = context.findRenderObject() as RenderBox;
-              final boxHitTestResult = BoxHitTestResult();
-              renderBox.hitTest(
-                boxHitTestResult,
-                position: pointerUpEvent.position,
-              );
+  void dispose() {
+    _tapOffsetStreamController.close();
+    super.dispose();
+  }
 
-              final ignorableTapped = boxHitTestResult.path.any((entry) {
-                print('entry -> $entry'); // TODO: remove
-                return entry.target.runtimeType ==
-                    TapOutsideDetectorWidgetRenderBox;
-              });
-              print('ignorableTapped -> $ignorableTapped'); // TODO: remove
-
-              final detectableTapped = boxHitTestResult.path.any((entry) {
-                print('entry -> $entry'); // TODO: remove
-                return entry.target.runtimeType == TapDetectorWidgetRenderBox;
-              });
-              print('detectableTapped -> $detectableTapped'); // TODO: remove
-
-              final insideTapped = ignorableTapped;
-              final outsideTapped = !ignorableTapped && detectableTapped;
-              print('insideTapped -> $insideTapped'); // TODO: remove
-              print('outsideTapped -> $outsideTapped'); // TODO: remove
-
-              final currentFocus = FocusScope.of(context);
-              print('currentFocus -> $currentFocus'); // TODO: remove
-
-              if (outsideTapped) {
-                final widget = TapOutsideDetectorWidget.of(context);
-                if (widget != null) {
-                  widget.onOutsideTapped();
-                } else {
-                  print('TapOutsideDetectorWidget == null');
-                }
-              }
-            },
-            child: TapDetectorWidget(
-              child: widget.child,
+  @override
+  Widget build(BuildContext context) => TapOffsetProvider(
+        stream: _tapOffsetStreamController.stream,
+        child: LayoutBuilder(
+          builder: (c, viewportConstraints) => ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: viewportConstraints.maxWidth,
+              maxHeight: viewportConstraints.maxHeight,
+            ),
+            child: Listener(
+              behavior: HitTestBehavior.translucent,
+              onPointerUp: (pointerEvent) {
+                _tapOffsetStreamController.add(pointerEvent.position);
+              },
+              child: TapDetectorWidget(
+                child: widget.child,
+              ),
             ),
           ),
         ),
       );
 }
 
-class TapDetectorWidget extends SingleChildRenderObjectWidget {
-  const TapDetectorWidget({
+@immutable
+class TapOffsetProvider extends InheritedWidget {
+  const TapOffsetProvider({
+    @required this.stream,
     @required Widget child,
     Key key,
   })  : assert(child != null),
-        super(child: child, key: key);
+        assert(stream != null),
+        super(key: key, child: child);
+
+  final Stream<Offset> stream;
+
+  static TapOffsetProvider of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<TapOffsetProvider>();
 
   @override
-  TapDetectorWidgetRenderBox createRenderObject(BuildContext context) =>
-      TapDetectorWidgetRenderBox();
+  bool updateShouldNotify(TapOffsetProvider oldWidget) =>
+      oldWidget.stream != stream;
 }
 
-class TapDetectorWidgetRenderBox extends RenderPointerListener {}
-
-class TapOutsideDetectorWidget extends SingleChildRenderObjectWidget {
-  const TapOutsideDetectorWidget({
-    @required Widget child,
-    @required this.onOutsideTapped,
+class TapDetectorWidget extends StatelessWidget {
+  const TapDetectorWidget({
+    @required this.child,
     Key key,
   })  : assert(child != null),
-        assert(onOutsideTapped != null),
-        super(child: child, key: key);
+        super(key: key);
 
-  static TapOutsideDetectorWidget of(BuildContext context) =>
-      context.findAncestorWidgetOfExactType<TapOutsideDetectorWidget>();
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Container(child: child);
+}
+
+class TapOutsideDetectorWidget extends StatefulWidget {
+  const TapOutsideDetectorWidget({
+    @required this.onOutsideTapped,
+    @required this.child,
+    Key key,
+  })  : assert(child != null),
+        super(key: key);
 
   final VoidCallback onOutsideTapped;
+  final Widget child;
 
   @override
-  TapOutsideDetectorWidgetRenderBox createRenderObject(BuildContext context) =>
-      TapOutsideDetectorWidgetRenderBox();
+  _TapOutsideDetectorWidgetState createState() =>
+      _TapOutsideDetectorWidgetState();
 }
 
-class TapOutsideDetectorWidgetRenderBox extends RenderPointerListener {}
+class _TapOutsideDetectorWidgetState extends State<TapOutsideDetectorWidget> {
+  StreamSubscription<Offset> _tapOffsetSubscription;
+
+  @override
+  void dispose() {
+    _tapOffsetSubscription.cancel();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _tapOffsetSubscription ??=
+        TapOffsetProvider?.of(context)?.stream?.listen(_handleTap);
+  }
+
+  void _handleTap(Offset position) {
+    if (mounted) {
+      final box = context.findRenderObject() as RenderBox;
+      final localPosition = box.globalToLocal(position);
+
+      if (!box.paintBounds.contains(localPosition)) {
+        widget.onOutsideTapped();
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => Container(child: widget.child);
+}
