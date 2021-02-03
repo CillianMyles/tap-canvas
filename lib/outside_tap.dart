@@ -3,27 +3,20 @@ library outside_tap;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-class TapWatcher extends StatefulWidget {
-  const TapWatcher({
+class TapCanvas extends StatefulWidget {
+  const TapCanvas({
     @required this.child,
-    @required this.onOutsideTapped,
     Key key,
   }) : super(key: key);
 
   final Widget child;
-  final VoidCallback onOutsideTapped;
 
   @override
-  _TapWatcherState createState() => _TapWatcherState();
+  _TapCanvasState createState() => _TapCanvasState();
 }
 
-class _TapWatcherState extends State<TapWatcher>
+class _TapCanvasState extends State<TapCanvas>
     with SingleTickerProviderStateMixin {
-  final Offset defaultOffset = const Offset(0, 0);
-  double pageY = 0;
-  double bottom = 0;
-  RenderBox lastRenderBox;
-
   @override
   void initState() {
     super.initState();
@@ -38,6 +31,8 @@ class _TapWatcherState extends State<TapWatcher>
           ),
           child: Listener(
             onPointerUp: (pointerUpEvent) {
+              print('*' * 20); // TODO: remove
+              print('pointerUpEvent -> $pointerUpEvent'); // TODO: remove
               final renderBox = context.findRenderObject() as RenderBox;
               final boxHitTestResult = BoxHitTestResult();
               renderBox.hitTest(
@@ -45,69 +40,53 @@ class _TapWatcherState extends State<TapWatcher>
                 position: pointerUpEvent.position,
               );
 
-              if (boxHitTestResult.path.any((entry) =>
-                  entry.target.runtimeType == OutsideTapIgnorerRenderBox)) {
-                // ignore taps to these widgets
-                return;
-              }
+              final ignorableClicked = boxHitTestResult.path.any((entry) {
+                print('entry -> $entry'); // TODO: remove
+                return entry.target.runtimeType == IgnorableWidgetRenderBox;
+              });
+              print('ignorableClicked -> $ignorableClicked'); // TODO: remove
 
-              final isWatched = boxHitTestResult.path.any((entry) =>
-                  entry.target.runtimeType == OutsideTapWatcherRenderBox);
+              final focusableClicked = boxHitTestResult.path.any((entry) {
+                print('entry -> $entry'); // TODO: remove
+                return entry.target.runtimeType == FocusableWidgetRenderBox;
+              });
+              print('focusableClicked -> $focusableClicked'); // TODO: remove
 
               final currentFocus = FocusScope.of(context);
-
-              if (!isWatched) {
-                if (!currentFocus.hasPrimaryFocus) {
-                  currentFocus.unfocus();
-                  lastRenderBox = null;
-                }
-              } else {
-                for (final entry in boxHitTestResult.path) {
-                  final isWatched =
-                      entry.target.runtimeType == OutsideTapWatcherRenderBox;
-
-                  if (isWatched) {
-                    final renderBox = entry.target as RenderBox;
-                    final offset = renderBox.localToGlobal(defaultOffset);
-                    bottom = offset.dy + renderBox.size.height - pageY;
-                    if (lastRenderBox != renderBox) {
-                      setState(() {});
-                      lastRenderBox = renderBox;
-                    }
-                  }
-                }
-              }
+              print('currentFocus -> $currentFocus'); // TODO: remove
             },
-            child: widget.child,
+            child: FocusableWidget(
+              child: widget.child,
+            ),
           ),
         ),
       );
 }
 
-class OutsideTapWatcher extends SingleChildRenderObjectWidget {
-  const OutsideTapWatcher({
+class FocusableWidget extends SingleChildRenderObjectWidget {
+  const FocusableWidget({
     @required Widget child,
     Key key,
   })  : assert(child != null),
         super(child: child, key: key);
 
   @override
-  OutsideTapWatcherRenderBox createRenderObject(BuildContext context) =>
-      OutsideTapWatcherRenderBox();
+  FocusableWidgetRenderBox createRenderObject(BuildContext context) =>
+      FocusableWidgetRenderBox();
 }
 
-class OutsideTapWatcherRenderBox extends RenderPointerListener {}
+class FocusableWidgetRenderBox extends RenderPointerListener {}
 
-class OutsideTapIgnorer extends SingleChildRenderObjectWidget {
-  const OutsideTapIgnorer({
+class IgnorableWidget extends SingleChildRenderObjectWidget {
+  const IgnorableWidget({
     @required Widget child,
     Key key,
   })  : assert(child != null),
         super(child: child, key: key);
 
   @override
-  OutsideTapIgnorerRenderBox createRenderObject(BuildContext context) =>
-      OutsideTapIgnorerRenderBox();
+  IgnorableWidgetRenderBox createRenderObject(BuildContext context) =>
+      IgnorableWidgetRenderBox();
 }
 
-class OutsideTapIgnorerRenderBox extends RenderPointerListener {}
+class IgnorableWidgetRenderBox extends RenderPointerListener {}
