@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:outside_tap/outside_tap.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,6 +34,13 @@ class _DemoPageState extends State<_DemoPage> {
   @override
   void initState() {
     super.initState();
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        print('FOCUS GAINED');
+      } else {
+        print('FOCUS LOST');
+      }
+    });
   }
 
   @override
@@ -42,42 +50,45 @@ class _DemoPageState extends State<_DemoPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Row(
-        children: [
-          Container(
-            width: 200,
-            color: Colors.red[200],
-          ),
-          Expanded(
-            child: Container(
-              color: Colors.grey[200],
-              child: Center(
-                child: Container(
-                  height: 60,
-                  width: 400,
-                  color: Colors.green[200],
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Container(
-                          height: 20,
-                          color: Colors.blue[100],
-                          child: TextField(
-                            focusNode: _focusNode,
-                            controller: _textController,
-                            textAlignVertical: TextAlignVertical.center,
+  Widget build(BuildContext context) => TapWatcher(
+        onOutsideTapped: () => print('onOutsideTapped'),
+        child: Row(
+          children: [
+            Container(
+              width: 200,
+              color: Colors.red[200],
+            ),
+            Expanded(
+              child: Container(
+                color: Colors.grey[200],
+                child: Center(
+                  child: Container(
+                    height: 60,
+                    width: 400,
+                    color: Colors.green[200],
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Container(
+                            height: 20,
+                            color: Colors.blue[100],
+                            child: TextField(
+                              focusNode: _focusNode,
+                              controller: _textController,
+                              textAlignVertical: TextAlignVertical.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 5),
-                    ],
+                        const SizedBox(height: 5),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
 }

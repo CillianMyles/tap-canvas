@@ -7,9 +7,11 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  cupertino_icons: ^1.0.2
+  cupertino_icons: "^1.0.2"
   flutter:
     sdk: flutter
+  outside_tap:
+    path: ../
 
 flutter:
   uses-material-design: true
