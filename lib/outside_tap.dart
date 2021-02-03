@@ -40,22 +40,26 @@ class _TapCanvasState extends State<TapCanvas>
                 position: pointerUpEvent.position,
               );
 
-              final ignorableClicked = boxHitTestResult.path.any((entry) {
+              final ignorableTapped = boxHitTestResult.path.any((entry) {
                 print('entry -> $entry'); // TODO: remove
-                return entry.target.runtimeType == IgnorableWidgetRenderBox;
+                return entry.target.runtimeType ==
+                    TapOutsideDetectorWidgetRenderBox;
               });
-              print('ignorableClicked -> $ignorableClicked'); // TODO: remove
+              print('ignorableTapped -> $ignorableTapped'); // TODO: remove
 
-              final focusableClicked = boxHitTestResult.path.any((entry) {
+              final detectableTapped = boxHitTestResult.path.any((entry) {
                 print('entry -> $entry'); // TODO: remove
-                return entry.target.runtimeType == FocusableWidgetRenderBox;
+                return entry.target.runtimeType == TapDetectorWidgetRenderBox;
               });
-              print('focusableClicked -> $focusableClicked'); // TODO: remove
+              print('detectableTapped -> $detectableTapped'); // TODO: remove
+
+              print('insideTapped -> $ignorableTapped'); // TODO: remove
+              print('outsideTapped -> ${!ignorableTapped && detectableTapped}');
 
               final currentFocus = FocusScope.of(context);
               print('currentFocus -> $currentFocus'); // TODO: remove
             },
-            child: FocusableWidget(
+            child: TapDetectorWidget(
               child: widget.child,
             ),
           ),
@@ -63,30 +67,34 @@ class _TapCanvasState extends State<TapCanvas>
       );
 }
 
-class FocusableWidget extends SingleChildRenderObjectWidget {
-  const FocusableWidget({
+class TapDetectorWidget extends SingleChildRenderObjectWidget {
+  const TapDetectorWidget({
     @required Widget child,
     Key key,
   })  : assert(child != null),
         super(child: child, key: key);
 
   @override
-  FocusableWidgetRenderBox createRenderObject(BuildContext context) =>
-      FocusableWidgetRenderBox();
+  TapDetectorWidgetRenderBox createRenderObject(BuildContext context) =>
+      TapDetectorWidgetRenderBox();
 }
 
-class FocusableWidgetRenderBox extends RenderPointerListener {}
+class TapDetectorWidgetRenderBox extends RenderPointerListener {}
 
-class IgnorableWidget extends SingleChildRenderObjectWidget {
-  const IgnorableWidget({
+class TapOutsideDetectorWidget extends SingleChildRenderObjectWidget {
+  const TapOutsideDetectorWidget({
     @required Widget child,
+    @required this.onOutsideTapped,
     Key key,
   })  : assert(child != null),
+        assert(onOutsideTapped != null),
         super(child: child, key: key);
 
+  final VoidCallback onOutsideTapped;
+
   @override
-  IgnorableWidgetRenderBox createRenderObject(BuildContext context) =>
-      IgnorableWidgetRenderBox();
+  TapOutsideDetectorWidgetRenderBox createRenderObject(BuildContext context) =>
+      TapOutsideDetectorWidgetRenderBox();
 }
 
-class IgnorableWidgetRenderBox extends RenderPointerListener {}
+class TapOutsideDetectorWidgetRenderBox extends RenderPointerListener {}

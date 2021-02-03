@@ -61,7 +61,8 @@ class _DemoPageState extends State<_DemoPage> {
               child: Container(
                 color: Colors.grey[200],
                 child: Center(
-                  child: IgnorableWidget(
+                  child: TapOutsideDetectorWidget(
+                    onOutsideTapped: () => print('OUTSIDE TAPPED'),
                     child: Container(
                       height: 60,
                       width: 400,
