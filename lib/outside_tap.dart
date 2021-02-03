@@ -43,8 +43,21 @@ class _TapCanvasState extends State<TapCanvas> {
             ),
             child: Listener(
               behavior: HitTestBehavior.translucent,
-              onPointerUp: (pointerEvent) {
-                _tapOffsetStreamController.add(pointerEvent.position);
+              onPointerDown: (event) {
+                print('event -> $event'); // TODO: remove
+              },
+              onPointerUp: (event) {
+                print('event -> $event'); // TODO: remove
+                _tapOffsetStreamController.add(event.position);
+              },
+              onPointerSignal: (event) {
+                print('event -> $event'); // TODO: remove
+              },
+              onPointerMove: (event) {
+                print('event -> $event'); // TODO: remove
+              },
+              onPointerHover: (event) {
+                //print('event -> $event'); // TODO: remove
               },
               child: TapDetectorWidget(
                 child: widget.child,
