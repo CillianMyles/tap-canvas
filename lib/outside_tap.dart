@@ -15,8 +15,7 @@ class TapCanvas extends StatefulWidget {
   _TapCanvasState createState() => _TapCanvasState();
 }
 
-class _TapCanvasState extends State<TapCanvas>
-    with SingleTickerProviderStateMixin {
+class _TapCanvasState extends State<TapCanvas> {
   @override
   void initState() {
     super.initState();
