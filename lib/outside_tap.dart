@@ -24,7 +24,7 @@ class _TapCanvasState extends State<TapCanvas>
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-        builder: (context, viewportConstraints) => ConstrainedBox(
+        builder: (c, viewportConstraints) => ConstrainedBox(
           constraints: BoxConstraints(
             maxWidth: viewportConstraints.maxWidth,
             maxHeight: viewportConstraints.maxHeight,
@@ -53,11 +53,22 @@ class _TapCanvasState extends State<TapCanvas>
               });
               print('detectableTapped -> $detectableTapped'); // TODO: remove
 
-              print('insideTapped -> $ignorableTapped'); // TODO: remove
-              print('outsideTapped -> ${!ignorableTapped && detectableTapped}');
+              final insideTapped = ignorableTapped;
+              final outsideTapped = !ignorableTapped && detectableTapped;
+              print('insideTapped -> $insideTapped'); // TODO: remove
+              print('outsideTapped -> $outsideTapped'); // TODO: remove
 
               final currentFocus = FocusScope.of(context);
               print('currentFocus -> $currentFocus'); // TODO: remove
+
+              if (outsideTapped) {
+                final widget = TapOutsideDetectorWidget.of(context);
+                if (widget != null) {
+                  widget.onOutsideTapped();
+                } else {
+                  print('TapOutsideDetectorWidget == null');
+                }
+              }
             },
             child: TapDetectorWidget(
               child: widget.child,
@@ -89,6 +100,9 @@ class TapOutsideDetectorWidget extends SingleChildRenderObjectWidget {
   })  : assert(child != null),
         assert(onOutsideTapped != null),
         super(child: child, key: key);
+
+  static TapOutsideDetectorWidget of(BuildContext context) =>
+      context.findAncestorWidgetOfExactType<TapOutsideDetectorWidget>();
 
   final VoidCallback onOutsideTapped;
 
