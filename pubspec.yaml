@@ -1,4 +1,4 @@
-name: outside_tap
+name: tap_canvas
 description: Detect taps outside of the current widget
 version: 0.0.1
 author:

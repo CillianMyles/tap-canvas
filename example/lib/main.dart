@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:outside_tap/outside_tap.dart';
+import 'package:tap_canvas/tap_canvas.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'Outside Tap Demo',
+        title: 'Tap Canvas Demo',
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
@@ -64,9 +64,13 @@ class DemoPageState extends State<DemoPage> {
                 color: Colors.grey[200],
                 child: Center(
                   child: TapOutsideDetectorWidget(
-                    onOutsideTapped: () {
+                    onTappedOutside: () {
                       print('OUTSIDE TAPPED');
                       _focusNode.unfocus();
+                    },
+                    onTappedInside: () {
+                      print('INSIDE TAPPED');
+                      _focusNode.requestFocus();
                     },
                     child: Container(
                       height: 60,

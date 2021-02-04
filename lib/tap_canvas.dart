@@ -1,9 +1,15 @@
-library outside_tap;
+library tap_canvas;
 
 import 'dart:async';
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+
+/// [TapCanvas] represents the area on which taps are tracked, in order to
+/// determine taps outside widgets like [TapOutsideDetectorWidget]. In
+/// general it makes sense to put this widget as high up the widget tree as
+/// possible, but it could be added anywhere above [TapOutsideDetectorWidget],
+/// such that it could lower the area of "taps outside" tracking.
 
 class TapCanvas extends StatefulWidget {
   const TapCanvas({
@@ -18,23 +24,18 @@ class TapCanvas extends StatefulWidget {
 }
 
 class _TapCanvasState extends State<TapCanvas> {
-  final StreamController<Offset> _tapOffsetStreamController =
+  final StreamController<Offset> _tapOffsetController =
       StreamController<Offset>.broadcast();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
-    _tapOffsetStreamController.close();
+    _tapOffsetController.close();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => TapOffsetProvider(
-        stream: _tapOffsetStreamController.stream,
+  Widget build(BuildContext context) => TapOffsetStreamProvider(
+        stream: _tapOffsetController.stream,
         child: LayoutBuilder(
           builder: (c, viewportConstraints) => ConstrainedBox(
             constraints: BoxConstraints(
@@ -43,25 +44,10 @@ class _TapCanvasState extends State<TapCanvas> {
             ),
             child: Listener(
               behavior: HitTestBehavior.translucent,
-              onPointerDown: (event) {
-                print('event -> $event'); // TODO: remove
-              },
               onPointerUp: (event) {
-                print('event -> $event'); // TODO: remove
-                _tapOffsetStreamController.add(event.position);
+                _tapOffsetController.add(event.position);
               },
-              onPointerSignal: (event) {
-                print('event -> $event'); // TODO: remove
-              },
-              onPointerMove: (event) {
-                print('event -> $event'); // TODO: remove
-              },
-              onPointerHover: (event) {
-                //print('event -> $event'); // TODO: remove
-              },
-              child: TapDetectorWidget(
-                child: widget.child,
-              ),
+              child: widget.child,
             ),
           ),
         ),
@@ -69,48 +55,38 @@ class _TapCanvasState extends State<TapCanvas> {
 }
 
 @immutable
-class TapOffsetProvider extends InheritedWidget {
-  const TapOffsetProvider({
+class TapOffsetStreamProvider extends InheritedWidget {
+  const TapOffsetStreamProvider({
     @required this.stream,
     @required Widget child,
     Key key,
-  })  : assert(child != null),
-        assert(stream != null),
+  })  : assert(stream != null),
+        assert(child != null),
         super(key: key, child: child);
 
   final Stream<Offset> stream;
 
-  static TapOffsetProvider of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<TapOffsetProvider>();
+  static TapOffsetStreamProvider of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<TapOffsetStreamProvider>();
 
   @override
-  bool updateShouldNotify(TapOffsetProvider oldWidget) =>
+  bool updateShouldNotify(TapOffsetStreamProvider oldWidget) =>
       oldWidget.stream != stream;
-}
-
-class TapDetectorWidget extends StatelessWidget {
-  const TapDetectorWidget({
-    @required this.child,
-    Key key,
-  })  : assert(child != null),
-        super(key: key);
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => Container(child: child);
 }
 
 class TapOutsideDetectorWidget extends StatefulWidget {
   const TapOutsideDetectorWidget({
-    @required this.onOutsideTapped,
     @required this.child,
+    @required this.onTappedOutside,
+    this.onTappedInside,
     Key key,
   })  : assert(child != null),
+        assert(onTappedOutside != null),
         super(key: key);
 
-  final VoidCallback onOutsideTapped;
   final Widget child;
+  final VoidCallback onTappedOutside;
+  final VoidCallback onTappedInside;
 
   @override
   _TapOutsideDetectorWidgetState createState() =>
@@ -122,7 +98,7 @@ class _TapOutsideDetectorWidgetState extends State<TapOutsideDetectorWidget> {
 
   @override
   void dispose() {
-    _tapOffsetSubscription.cancel();
+    _tapOffsetSubscription?.cancel();
     super.dispose();
   }
 
@@ -130,7 +106,7 @@ class _TapOutsideDetectorWidgetState extends State<TapOutsideDetectorWidget> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _tapOffsetSubscription ??=
-        TapOffsetProvider?.of(context)?.stream?.listen(_handleTap);
+        TapOffsetStreamProvider?.of(context)?.stream?.listen(_handleTap);
   }
 
   void _handleTap(Offset position) {
@@ -138,12 +114,12 @@ class _TapOutsideDetectorWidgetState extends State<TapOutsideDetectorWidget> {
       final box = context.findRenderObject() as RenderBox;
       final localPosition = box.globalToLocal(position);
 
-      if (!box.paintBounds.contains(localPosition)) {
-        widget.onOutsideTapped();
-      }
+      box.paintBounds.contains(localPosition)
+          ? widget.onTappedInside?.call()
+          : widget.onTappedOutside();
     }
   }
 
   @override
-  Widget build(BuildContext context) => Container(child: widget.child);
+  Widget build(BuildContext context) => widget.child;
 }

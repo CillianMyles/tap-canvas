@@ -1,5 +1,5 @@
-name: outside_tap_example
-description: An example project to demo outside_tap
+name: tap_canvas_example
+description: An example project to demo tap_canvas
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -10,7 +10,7 @@ dependencies:
   cupertino_icons: "^1.0.2"
   flutter:
     sdk: flutter
-  outside_tap:
+  tap_canvas:
     path: ../
 
 flutter:
