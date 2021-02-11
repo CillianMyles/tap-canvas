@@ -43,7 +43,7 @@ class _TapCanvasState extends State<TapCanvas> {
             ),
             child: Listener(
               behavior: HitTestBehavior.translucent,
-              onPointerUp: (event) {
+              onPointerDown: (event) {
                 _tapOffsetController.add(event.position);
               },
               child: widget.child,
