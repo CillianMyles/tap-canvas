@@ -1,6 +1,6 @@
 name: tap_canvas
 description: Detect taps outside of the current widget
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/CillianMyles/tap-canvas
 
 environment:
