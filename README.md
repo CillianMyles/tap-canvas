@@ -113,11 +113,11 @@ class DemoPageState extends State<DemoPage> {
 
 - [ ] Create better demo app to show off use case
 - [x] Add documentation for public classes / methods
-- [ ] Add test coverage
-- [ ] Add more convenience widgets e.g. `OutsideTapDismissFocusWidget`
+- [x] Add test coverage
+- [ ] Add more convenience widgets e.g. `TapOutsideDismissFocusWidget`
 - [x] Example to README
-- [ ] Install guide
+- [x] Install guide (handled by pub.dev)
 - [ ] Screenshots / GIF of demo
 - [ ] Automate tests
 - [ ] Display code coverage % badge
-- [ ] Upload to pub.dev
+- [x] Upload to pub.dev
