@@ -13,9 +13,7 @@ class TapOffsetProvider extends InheritedWidget {
     required this.stream,
     required Widget child,
     Key? key,
-  })  : assert(stream != null),
-        assert(child != null),
-        super(key: key, child: child);
+  }) : super(key: key, child: child);
 
   final Stream<Offset> stream;
 

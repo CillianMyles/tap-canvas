@@ -15,9 +15,7 @@ class TapOutsideDetectorWidget extends StatefulWidget {
     required this.onTappedOutside,
     this.onTappedInside,
     Key? key,
-  })  : assert(child != null),
-        assert(onTappedOutside != null),
-        super(key: key);
+  }) : super(key: key);
 
   final Widget child;
   final VoidCallback onTappedOutside;
