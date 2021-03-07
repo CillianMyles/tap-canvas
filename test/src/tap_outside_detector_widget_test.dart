@@ -71,7 +71,7 @@ void main() {
           await tester.pump();
         });
 
-        testUI('then the correct callback in invoked', (tester) async {
+        testUI('then the correct callback is invoked', (tester) async {
           verify(() => onTappedInside()).called(1);
           verifyNever(() => onTappedOutside());
         });
@@ -83,9 +83,44 @@ void main() {
           await tester.pump();
         });
 
-        testUI('then the correct callback in invoked', (tester) async {
+        testUI('then the correct callback is invoked', (tester) async {
           verify(() => onTappedOutside()).called(1);
           verifyNever(() => onTappedInside());
+        });
+      });
+    });
+
+    group(
+        'when callbacks for outside taps are provided, but not for inside taps',
+        () {
+      setUpUI((tester) async {
+        await tester.pumpWidget(createWidget(onTappedOutside: onTappedOutside));
+        await tester.pump();
+      });
+
+      testUI('then no callbacks have yet been invoked', (tester) async {
+        verifyNever(() => onTappedOutside());
+      });
+
+      group('and INSIDE the tap detector widget is tapped', () {
+        setUpUI((tester) async {
+          await tester.tap(find.byKey(insideKey));
+          await tester.pump();
+        });
+
+        testUI('then no callbacks are in invoked', (tester) async {
+          verifyNever(() => onTappedOutside());
+        });
+      });
+
+      group('and OUTSIDE the tap detector widget is tapped', () {
+        setUpUI((tester) async {
+          await tester.tap(find.byKey(outsideKey));
+          await tester.pump();
+        });
+
+        testUI('then the correct callback is invoked', (tester) async {
+          verify(() => onTappedOutside()).called(1);
         });
       });
     });
