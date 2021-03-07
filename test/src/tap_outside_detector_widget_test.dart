@@ -72,6 +72,18 @@ void main() {
           verifyNever(() => onTappedOutside());
         });
       });
+
+      group('and OUTSIDE the tap detector widget is tapped', () {
+        setUpUI((tester) async {
+          await tester.tap(find.byKey(outsideKey));
+          await tester.pump();
+        });
+
+        testUI('then the correct callback in invoked', (tester) async {
+          verify(() => onTappedOutside()).called(1);
+          verifyNever(() => onTappedInside());
+        });
+      });
     });
   });
 }
