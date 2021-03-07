@@ -6,7 +6,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
 }
 
 class DemoPage extends StatefulWidget {
-  const DemoPage({Key key}) : super(key: key);
+  const DemoPage({Key? key}) : super(key: key);
 
   @override
   DemoPageState createState() => DemoPageState();

@@ -9,7 +9,7 @@ void main() {
         test('then an assertion error is thrown', () {
           expect(
             () => TapOffsetProvider(
-              stream: null,
+              stream: null!,
               child: Container(),
             ),
             throwsAssertionError,
@@ -22,7 +22,7 @@ void main() {
           expect(
             () => TapOffsetProvider(
               stream: const Stream.empty(),
-              child: null,
+              child: null!,
             ),
             throwsAssertionError,
           );

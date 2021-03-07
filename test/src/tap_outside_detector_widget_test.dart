@@ -9,7 +9,7 @@ void main() {
         test('then an assertion error is thrown', () {
           expect(
             () => TapOutsideDetectorWidget(
-              onTappedOutside: null,
+              onTappedOutside: null!,
               child: Container(),
             ),
             throwsAssertionError,
@@ -22,7 +22,7 @@ void main() {
           expect(
             () => TapOutsideDetectorWidget(
               onTappedOutside: () => {},
-              child: null,
+              child: null!,
             ),
             throwsAssertionError,
           );

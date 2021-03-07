@@ -6,7 +6,7 @@ void main() {
     group('when an instance is created', () {
       group('and child is passed as null', () {
         test('then an assertion error is thrown', () {
-          expect(() => TapCanvas(child: null), throwsAssertionError);
+          expect(() => TapCanvas(child: null!), throwsAssertionError);
         });
       });
     });
