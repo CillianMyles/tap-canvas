@@ -21,22 +21,26 @@ void main() {
     }) =>
         Material(
           child: TapCanvas(
-            // ignore: sized_box_for_whitespace
-            child: Container(
-              key: outsideKey,
+            child: SizedBox(
               height: 200,
               width: 200,
-              child: Center(
-                child: TapOutsideDetectorWidget(
-                  onTappedOutside: onTappedOutside,
-                  onTappedInside: onTappedInside,
-                  // ignore: sized_box_for_whitespace
-                  child: Container(
-                    key: insideKey,
-                    height: 50,
-                    width: 50,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    key: outsideKey,
+                    height: 100,
+                    width: 200,
                   ),
-                ),
+                  TapOutsideDetectorWidget(
+                    onTappedOutside: onTappedOutside,
+                    onTappedInside: onTappedInside,
+                    child: const SizedBox(
+                      key: insideKey,
+                      height: 100,
+                      width: 200,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
