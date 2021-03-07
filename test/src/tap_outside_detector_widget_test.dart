@@ -1,31 +1,126 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test_ui/flutter_test_ui.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:tap_canvas/src/tap_canvas.dart';
 import 'package:tap_canvas/src/tap_outside_detector_widget.dart';
+
+import 'mocks.dart';
 
 void main() {
   group('$TapOutsideDetectorWidget', () {
-    group('when an instance is created', () {
-      group('and onTappedOutside is passed as null', () {
-        test('then an assertion error is thrown', () {
-          expect(
-            () => TapOutsideDetectorWidget(
-              onTappedOutside: null,
-              child: Container(),
+    const outsideKey = Key('outside');
+    const insideKey = Key('inside');
+
+    late Function0Mock<void> onTappedOutside;
+    late Function0Mock<void> onTappedInside;
+
+    Widget createWidget({
+      required VoidCallback onTappedOutside,
+      VoidCallback? onTappedInside,
+    }) =>
+        Material(
+          child: TapCanvas(
+            child: SizedBox(
+              height: 200,
+              width: 200,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    key: outsideKey,
+                    height: 100,
+                    width: 200,
+                  ),
+                  TapOutsideDetectorWidget(
+                    onTappedOutside: onTappedOutside,
+                    onTappedInside: onTappedInside,
+                    child: const SizedBox(
+                      key: insideKey,
+                      height: 100,
+                      width: 200,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            throwsAssertionError,
-          );
+          ),
+        );
+
+    setUp(() {
+      onTappedOutside = Function0Mock();
+      onTappedInside = Function0Mock();
+    });
+
+    group('when callbacks for outside and inside taps are provided', () {
+      setUpUI((tester) async {
+        await tester.pumpWidget(createWidget(
+          onTappedOutside: onTappedOutside,
+          onTappedInside: onTappedInside,
+        ));
+        await tester.pump();
+      });
+
+      testUI('then no callbacks have yet been invoked', (tester) async {
+        verifyNever(() => onTappedInside());
+        verifyNever(() => onTappedOutside());
+      });
+
+      group('and INSIDE the tap detector widget is tapped', () {
+        setUpUI((tester) async {
+          await tester.tap(find.byKey(insideKey));
+          await tester.pump();
+        });
+
+        testUI('then the correct callback is invoked', (tester) async {
+          verify(() => onTappedInside()).called(1);
+          verifyNever(() => onTappedOutside());
         });
       });
 
-      group('and child is passed as null', () {
-        test('then an assertion error is thrown', () {
-          expect(
-            () => TapOutsideDetectorWidget(
-              onTappedOutside: () => {},
-              child: null,
-            ),
-            throwsAssertionError,
-          );
+      group('and OUTSIDE the tap detector widget is tapped', () {
+        setUpUI((tester) async {
+          await tester.tap(find.byKey(outsideKey));
+          await tester.pump();
+        });
+
+        testUI('then the correct callback is invoked', (tester) async {
+          verify(() => onTappedOutside()).called(1);
+          verifyNever(() => onTappedInside());
+        });
+      });
+    });
+
+    group(
+        'when callbacks for outside taps are provided, but not for inside taps',
+        () {
+      setUpUI((tester) async {
+        await tester.pumpWidget(createWidget(onTappedOutside: onTappedOutside));
+        await tester.pump();
+      });
+
+      testUI('then no callbacks have yet been invoked', (tester) async {
+        verifyNever(() => onTappedOutside());
+      });
+
+      group('and INSIDE the tap detector widget is tapped', () {
+        setUpUI((tester) async {
+          await tester.tap(find.byKey(insideKey));
+          await tester.pump();
+        });
+
+        testUI('then no callbacks are in invoked', (tester) async {
+          verifyNever(() => onTappedOutside());
+        });
+      });
+
+      group('and OUTSIDE the tap detector widget is tapped', () {
+        setUpUI((tester) async {
+          await tester.tap(find.byKey(outsideKey));
+          await tester.pump();
+        });
+
+        testUI('then the correct callback is invoked', (tester) async {
+          verify(() => onTappedOutside()).called(1);
         });
       });
     });

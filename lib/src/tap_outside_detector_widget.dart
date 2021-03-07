@@ -11,17 +11,15 @@ import 'package:tap_canvas/src/tap_offset_provider.dart';
 /// focus and text input when something outside of it is interacted with.
 class TapOutsideDetectorWidget extends StatefulWidget {
   const TapOutsideDetectorWidget({
-    @required this.child,
-    @required this.onTappedOutside,
+    required this.child,
+    required this.onTappedOutside,
     this.onTappedInside,
-    Key key,
-  })  : assert(child != null),
-        assert(onTappedOutside != null),
-        super(key: key);
+    Key? key,
+  }) : super(key: key);
 
   final Widget child;
   final VoidCallback onTappedOutside;
-  final VoidCallback onTappedInside;
+  final VoidCallback? onTappedInside;
 
   @override
   _TapOutsideDetectorWidgetState createState() =>
@@ -29,7 +27,7 @@ class TapOutsideDetectorWidget extends StatefulWidget {
 }
 
 class _TapOutsideDetectorWidgetState extends State<TapOutsideDetectorWidget> {
-  StreamSubscription<Offset> _tapOffsetSubscription;
+  StreamSubscription<Offset>? _tapOffsetSubscription;
 
   @override
   void dispose() {
@@ -41,7 +39,7 @@ class _TapOutsideDetectorWidgetState extends State<TapOutsideDetectorWidget> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _tapOffsetSubscription ??=
-        TapOffsetProvider?.of(context)?.stream?.listen(_handleTap);
+        TapOffsetProvider?.of(context)?.stream.listen(_handleTap);
   }
 
   void _handleTap(Offset position) {

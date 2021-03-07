@@ -10,16 +10,14 @@ import 'package:tap_canvas/src/tap_canvas.dart';
 @immutable
 class TapOffsetProvider extends InheritedWidget {
   const TapOffsetProvider({
-    @required this.stream,
-    @required Widget child,
-    Key key,
-  })  : assert(stream != null),
-        assert(child != null),
-        super(key: key, child: child);
+    required this.stream,
+    required Widget child,
+    Key? key,
+  }) : super(key: key, child: child);
 
   final Stream<Offset> stream;
 
-  static TapOffsetProvider of(BuildContext context) =>
+  static TapOffsetProvider? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<TapOffsetProvider>();
 
   @override

@@ -1,10 +1,10 @@
 name: tap_canvas
 description: Detect taps outside the currently defined widget and provide a callback when taps occur.
-version: 0.0.3
+version: 0.9.0-nullsafety.0
 homepage: https://github.com/CillianMyles/tap-canvas
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
@@ -14,5 +14,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_test_ui: 2.0.0-nullsafety.0
+  mocktail: ^0.0.2-dev.2
 
 flutter:
