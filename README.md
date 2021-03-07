@@ -2,7 +2,7 @@
 
 Detect taps outside the currently defined widget and provide a callback when taps occur.
 
-## Example 
+## Example
 
 ```dart
 void main() {
@@ -10,10 +10,11 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
+  Widget build(BuildContext context) =>
+      MaterialApp(
         title: 'Tap Canvas Demo',
         theme: ThemeData(
           primarySwatch: Colors.grey,
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
 }
 
 class DemoPage extends StatefulWidget {
-  const DemoPage({Key key}) : super(key: key);
+  const DemoPage({Key? key}) : super(key: key);
 
   @override
   DemoPageState createState() => DemoPageState();
@@ -56,7 +57,8 @@ class DemoPageState extends State<DemoPage> {
   }
 
   @override
-  Widget build(BuildContext context) => TapCanvas(
+  Widget build(BuildContext context) =>
+      TapCanvas(
         child: Row(
           children: [
             Container(
@@ -108,16 +110,3 @@ class DemoPageState extends State<DemoPage> {
       );
 }
 ```
-
-## TODOs
-
-- [ ] Create better demo app to show off use case
-- [x] Add documentation for public classes / methods
-- [x] Add test coverage
-- [ ] Add more convenience widgets e.g. `TapOutsideDismissFocusWidget`
-- [x] Example to README
-- [x] Install guide (handled by pub.dev)
-- [ ] Screenshots / GIF of demo
-- [ ] Automate tests
-- [ ] Display code coverage % badge
-- [x] Upload to pub.dev
