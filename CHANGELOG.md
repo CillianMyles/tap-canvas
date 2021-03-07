@@ -1,3 +1,7 @@
+## [0.9.1] - 2021/03/07
+
+* Follow-up null safety release w/ updated README
+
 ## [0.9.0-nullsafety.0] - 2021/03/07
 
 * Migrate library to use sound null safety

@@ -1,6 +1,6 @@
 name: tap_canvas
 description: Detect taps outside the currently defined widget and provide a callback when taps occur.
-version: 0.9.0-nullsafety.0
+version: 0.9.1
 homepage: https://github.com/CillianMyles/tap-canvas
 
 environment:
