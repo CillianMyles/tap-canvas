@@ -13,12 +13,17 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: stable
-      - name: Install application dependencies
+      - name: Install dependencies
         run: flutter pub get
       - name: Analyze the code (style)
         run: flutter analyze
       - name: Ensure code formatted correctly
         run: flutter format -n --set-exit-if-changed .
+      - name: Ensure code coverage checks correct files
+        run: |
+          #!/bin/bash
+          chmod +x bin/prep_files_for_code_coverage_check.sh
+          sudo ./bin/prep_files_for_code_coverage_check.sh tap_canvas
       - name: Run the tests (with coverage)
         run: flutter test --coverage
       - uses: VeryGoodOpenSource/very_good_coverage@v1.1.1

@@ -1,0 +1,30 @@
+---
+name: Coverage Report
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    name: Generate + Publish Code Coverage Report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1.4.0
+        with:
+          channel: stable
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Ensure code coverage checks correct files
+        run: |
+          #!/bin/bash
+          chmod +x bin/prep_files_for_code_coverage_check.sh
+          sudo ./bin/prep_files_for_code_coverage_check.sh tap_canvas
+      - name: Run tests
+        run: flutter test --coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1.2.1
+        with:
+          file: coverage/lcov.info
+          token: "${{ secrets.CODECOV_TOKEN }}"
