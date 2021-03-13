@@ -1,0 +1,35 @@
+---
+name: PR Checks
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - "*"
+jobs:
+  on-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: stable
+      - name: Install application dependencies
+        run: flutter pub get
+      - name: Analyze the code (style)
+        run: flutter analyze
+      - name: Ensure code formatted correctly
+        run: flutter format -n --set-exit-if-changed .
+      - name: Run the tests (with coverage)
+        run: flutter test --coverage
+      - uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
+        with:
+          path: "./coverage/lcov.info"
+          min_coverage: 0
+      - name: Upload test coverage report to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: "${{ secrets.CODECOV_TOKEN }}"
+      - uses: mszlgr/lcov-reporter-action@v0.2.23
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          lcov-file: "./coverage/lcov.info"
