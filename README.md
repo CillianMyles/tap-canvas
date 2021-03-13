@@ -1,5 +1,7 @@
 # 🚰 TapCanvas
 
+[![codecov](https://codecov.io/gh/CillianMyles/tap-canvas/branch/main/graph/badge.svg?token=B0QHI0452L)](https://codecov.io/gh/CillianMyles/tap-canvas)
+
 Detect taps outside the currently defined widget and provide a callback when taps occur.
 
 ## Example
