@@ -1,0 +1,13 @@
+#!/bin/sh
+# To use add to `.git/hooks/`
+# Should be named `pre-push`
+# Make executable with `chmod +x`
+
+# run the tests
+flutter test
+if [ $? -ne 0 ]; then
+  exit 1
+fi
+
+# getting to this point symbolises success
+exit 0
