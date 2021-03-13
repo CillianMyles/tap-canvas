@@ -9,6 +9,7 @@
 .history
 .svn/
 coverage/**
+test/coverage_helper_test.dart
 
 # IntelliJ related
 *.iml
