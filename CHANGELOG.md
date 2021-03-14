@@ -1,3 +1,10 @@
+## [0.9.2] - 2021/03/14
+
+* Increase code coverage to 100%
+* Automatically run all tests against PRs
+* Track code coverage using Codecov
+* Display code coverage badge in README
+
 ## [0.9.1] - 2021/03/07
 
 * Follow-up null safety release w/ updated README
