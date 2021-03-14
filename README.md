@@ -6,6 +6,23 @@ Detect taps outside the currently defined widget and provide a callback when tap
 
 ## Example
 
+### Define the area within which you care about taps
+
+```dart
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+    home: TapCanvas(
+      child: MyHomeWidget(),
+    ),
+  );
+}
+```
+
+### Now your widgets can react when the user taps outside them
+
 ```dart
 class TapOutsideAwareWidget extends StatelessWidget {
   const TapOutsideAwareWidget({Key? key}) : super(key: key);
