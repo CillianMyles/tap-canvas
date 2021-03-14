@@ -9,7 +9,6 @@ on:
 
 jobs:
   build:
-    name: Generate + Publish Code Coverage Report
     runs-on: ubuntu-latest
     steps:
       - name: Check out the code
