@@ -29,7 +29,7 @@ jobs:
       - uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
         with:
           path: "./coverage/lcov.info"
-          min_coverage: 90
+          min_coverage: 100
       - name: Upload test coverage report to Codecov
         uses: codecov/codecov-action@v1
         with:
