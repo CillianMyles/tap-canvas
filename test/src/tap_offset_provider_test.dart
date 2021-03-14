@@ -3,6 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_test_ui/flutter_test_ui.dart';
 import 'package:tap_canvas/src/tap_offset_provider.dart';
 
+/// Tests for inherited widgets inspired by:
+/// https://github.com/flutter/flutter/blob/master/packages/flutter/test/widgets/inherited_test.dart
+
 void main() {
   group('$TapOffsetProvider', () {
     late Stream<Offset> streamOne;
