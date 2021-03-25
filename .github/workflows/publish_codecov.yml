@@ -21,7 +21,6 @@ jobs:
         run: flutter pub get
       - name: Ensure code coverage checks correct files
         run: |
-          #!/bin/bash
           chmod +x bin/prep_files_for_code_coverage_check.sh
           sudo ./bin/prep_files_for_code_coverage_check.sh tap_canvas
       - name: Run the tests (with coverage)
