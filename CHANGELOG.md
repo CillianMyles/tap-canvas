@@ -1,3 +1,7 @@
+## [0.9.3] - 2021/03/25
+
+* Add generated documentation with `dartdoc`
+
 ## [0.9.2] - 2021/03/14
 
 * Increase code coverage to 100%
