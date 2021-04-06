@@ -3,6 +3,7 @@
 Detect taps outside the currently defined widget and provide a callback when taps occur.
 
 [![codecov](https://codecov.io/gh/CillianMyles/tap-canvas/branch/main/graph/badge.svg?token=B0QHI0452L)](https://codecov.io/gh/CillianMyles/tap-canvas)
+[![pub package](https://img.shields.io/pub/v/tap_canvas.svg?color=success)](https://pub.dartlang.org/packages/tap_canvas)
 
 ## Example
 
