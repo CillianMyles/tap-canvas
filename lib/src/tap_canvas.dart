@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tap_canvas/src/tap_offset_provider.dart';
 import 'package:tap_canvas/src/tap_outside_detector_widget.dart';
