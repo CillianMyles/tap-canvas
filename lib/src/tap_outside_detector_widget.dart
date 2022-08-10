@@ -43,9 +43,12 @@ class _TapOutsideDetectorWidgetState extends State<TapOutsideDetectorWidget> {
 
   void _handleTap(Offset position) {
     if (mounted) {
-      final box = context.findRenderObject() as RenderBox;
-      final localPosition = box.globalToLocal(position);
+      final box = context.findRenderObject();
+      if (box == null || box is! RenderBox) {
+        return;
+      }
 
+      final localPosition = box.globalToLocal(position);
       box.paintBounds.contains(localPosition)
           ? widget.onTappedInside?.call()
           : widget.onTappedOutside();
