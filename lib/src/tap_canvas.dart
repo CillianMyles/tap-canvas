@@ -10,10 +10,7 @@ import 'package:tap_canvas/src/tap_outside_detector_widget.dart';
 /// possible, but it could be added anywhere above [TapOutsideDetectorWidget],
 /// such that it could lower the area of "taps outside" tracking.
 class TapCanvas extends StatefulWidget {
-  const TapCanvas({
-    required this.child,
-    Key? key,
-  }) : super(key: key);
+  const TapCanvas({super.key, required this.child});
 
   final Widget child;
 

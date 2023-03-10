@@ -38,9 +38,9 @@ class DemoPageState extends State<DemoPage> {
     super.initState();
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        print('FOCUS GAINED');
+        debugPrint('FOCUS GAINED');
       } else {
-        print('FOCUS LOST');
+        debugPrint('FOCUS LOST');
       }
     });
   }
@@ -65,11 +65,11 @@ class DemoPageState extends State<DemoPage> {
                 child: Center(
                   child: TapOutsideDetectorWidget(
                     onTappedOutside: () {
-                      print('OUTSIDE TAPPED');
+                      debugPrint('OUTSIDE TAPPED');
                       _focusNode.unfocus();
                     },
                     onTappedInside: () {
-                      print('INSIDE TAPPED');
+                      debugPrint('INSIDE TAPPED');
                       _focusNode.requestFocus();
                     },
                     child: Container(
