@@ -12,11 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the code
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v3
       - name: Set up Flutter
-        uses: subosito/flutter-action@v1.4.0
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
+      - name: Print the Flutter version
+        run: flutter --version
       - name: Install dependencies
         run: flutter pub get
       - name: Ensure code coverage checks correct files
@@ -26,6 +28,6 @@ jobs:
       - name: Run the tests (with coverage)
         run: flutter test --coverage
       - name: Upload code coverage report to Codecov
-        uses: codecov/codecov-action@v1.2.2
+        uses: codecov/codecov-action@v3
         with:
           token: "${{ secrets.CODECOV_TOKEN }}"

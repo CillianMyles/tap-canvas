@@ -1,3 +1,11 @@
+## [0.9.5] - 2023/03/11
+
+* Add deprecation notice in README
+* Switch to MIT license
+* Bump project dependencies
+* Switch to standard Flutter lint rules
+* Fix static analysis warnings
+
 ## [0.9.4] - 2022/04/17
 
 * Update project dependencies
