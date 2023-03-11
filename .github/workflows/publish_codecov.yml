@@ -17,6 +17,8 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+      - name: Print the Flutter version
+        run: flutter --version
       - name: Install dependencies
         run: flutter pub get
       - name: Ensure code coverage checks correct files
